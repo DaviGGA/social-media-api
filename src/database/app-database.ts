@@ -13,7 +13,7 @@ export class AppDatabase extends Database {
         password: "postgres",
         database: "redesocial",
         synchronize: true,
-        logging: true,
+        logging: false,
         entities: [User],
         subscribers: [],
         migrations: [],
