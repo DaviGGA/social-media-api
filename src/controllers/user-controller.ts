@@ -10,7 +10,7 @@ export class UserController {
         this.service = new UserService(database);
     }
 
-    public createUser =  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         const email: string = req.body.email;
         const password: string = req.body.password;
         const confirmPassword: string = req.body.confirm_password;
