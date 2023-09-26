@@ -12,21 +12,22 @@ export class TestDatabase {
         password: "postgres",
         database: "test_redesocial",
         synchronize: true,
-        logging: true,
+        logging: false,
         dropSchema:true,
         entities: [User],
         subscribers: [],
         migrations: [],
     })
 
-    connectDatabase(): void {
-        this.datasource.initialize().then(async () => {
+    public async connectDatabase(): Promise<void> {        
+        await this.datasource.initialize().then(async () => {
             console.log("Succesfully connected to test database");          
         }).catch(error => console.log(error));
     }
 
-    disconnectDatabase(): void {
-        this.datasource.destroy();
+    public async disconnectDatabase(): Promise<void> {
+        await this.datasource.destroy();
+        console.log("Succesfully destroyed test database");
     }
 
     get manager(): EntityManager {
