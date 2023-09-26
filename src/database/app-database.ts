@@ -1,8 +1,9 @@
 import "reflect-metadata"
 import { DataSource, EntityManager } from "typeorm"
-import { User } from "./entities/User"
+import { User } from "../entities/User"
+import { Database } from "./database"
 
-export class Database {
+export class AppDatabase extends Database {
 
     public datasource: DataSource = new DataSource({
         type: "postgres",
@@ -18,17 +19,5 @@ export class Database {
         migrations: [],
     })
     
-    connectDatabase(): void {
-        this.datasource.initialize().then(async () => {
-            console.log("Succesfully connected to database");          
-        }).catch(error => console.log(error));
-    }
-
-    disconnectDatabase(): void {
-        this.datasource.destroy();
-    }
-
-    get manager(): EntityManager {
-        return this.datasource.manager;
-    }
+    
 }

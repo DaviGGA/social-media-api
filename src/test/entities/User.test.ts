@@ -1,8 +1,7 @@
-import { log } from "console";
 import "reflect-metadata"
-import { expect, test, describe, beforeAll, afterAll } from 'vitest';
+import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 import { User } from '../../entities/User';
-import { TestDatabase } from '../test-database';
+import { TestDatabase } from '../../database/test-database';
 
 const db: TestDatabase = new TestDatabase();
 
@@ -12,6 +11,10 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await db.disconnectDatabase();
+})
+
+afterEach( async () => {
+    await db.manager.getRepository(User).clear();
 })
 
 
