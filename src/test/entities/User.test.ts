@@ -3,9 +3,10 @@ import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 import { User } from '../../entities/User';
 import { TestDatabase } from '../../database/test-database';
 
-const db: TestDatabase = new TestDatabase();
+let db: TestDatabase;
 
 beforeAll(async () => {
+    db  = new TestDatabase();
     await db.connectDatabase();
 })
 

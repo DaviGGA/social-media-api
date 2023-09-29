@@ -14,7 +14,6 @@ export class TestDatabase extends Database {
         database: "test_redesocial",
         synchronize: true,
         logging: false,
-        dropSchema:true,
         entities: [User],
         subscribers: [],
         migrations: [],
