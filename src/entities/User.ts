@@ -16,6 +16,10 @@ export class User {
     @Column({type:'varchar'})
     password: String;
 
+    @OneToOne(() => Profile, {nullable: true, cascade: true})
+    @JoinColumn()
+    profile?: Profile;
+
     @BeforeInsert()
     public async beforeInsert(): Promise<void> {
         this.validate();

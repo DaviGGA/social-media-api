@@ -11,8 +11,7 @@ export class App {
         this.server = express();
         this.database = database;
         this.middleware();
-        this.routes();
-           
+        this.routes();    
     }
 
     private middleware(): void {
@@ -22,6 +21,7 @@ export class App {
     private routes(): void {
         this.server.use('/user', new UserRouter(this.database).router)
     }
+    
 
     // ROUTER
 }

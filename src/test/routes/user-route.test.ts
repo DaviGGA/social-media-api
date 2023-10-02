@@ -7,14 +7,14 @@ import { App } from "../../app";
 let db: TestDatabase;
 let app: App;
 
-beforeAll(async () => {
+beforeAll(async () => {   
     db = new TestDatabase();
     app = new App(db);
     await db.connectDatabase();
 })
 
 afterAll(async () => {
-    await db.disconnectDatabase();
+    await db.disconnectDatabase();    
 })
 
 afterEach( async () => {

@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import { DataSource, EntityManager } from "typeorm"
 import { User } from "../entities/User"
+import { Profile } from "../entities/Profile"
 import { Database } from "./database"
 
 export class AppDatabase extends Database {
@@ -14,7 +15,7 @@ export class AppDatabase extends Database {
         database: "redesocial",
         synchronize: true,
         logging: false,
-        entities: [User],
+        entities: [User,Profile],
         subscribers: [],
         migrations: [],
     })

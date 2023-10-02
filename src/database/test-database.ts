@@ -1,6 +1,8 @@
 import "reflect-metadata"
-import { BaseEntity, DataSource, EntityManager, EntityTarget, ObjectLiteral } from "typeorm"
+import { BaseEntity, DataSource, EntityManager, EntityTarget, ObjectLiteral, Repository } from "typeorm"
 import { User } from "../entities/User"
+import { Profile } from "../entities/Profile"
+
 import { Database } from "./database";
 
 export class TestDatabase extends Database {
@@ -14,13 +16,16 @@ export class TestDatabase extends Database {
         database: "test_redesocial",
         synchronize: true,
         logging: false,
-        entities: [User],
+        entities: [User,Profile],
         subscribers: [],
         migrations: [],
     })
 
     public async clearTable(Entity: EntityTarget<ObjectLiteral>): Promise<void> {
-        await this.manager.getRepository(Entity).clear();
+        let repository: Repository<ObjectLiteral> = this.manager.getRepository(Entity);
+        let records: ObjectLiteral[] = await repository.find();
+        await repository.remove(records);
+
     }
     
 }
