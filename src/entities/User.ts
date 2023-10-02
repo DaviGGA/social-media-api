@@ -1,6 +1,8 @@
 import "reflect-metadata"
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, 
+OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import { Profile } from "./Profile";
 
 @Entity()
 @Unique(['email'])
@@ -13,7 +15,6 @@ export class User {
 
     @Column({type:'varchar'})
     password: String;
-
 
     @BeforeInsert()
     public async beforeInsert(): Promise<void> {

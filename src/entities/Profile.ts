@@ -1,6 +1,7 @@
-import { type } from "os";
 import "reflect-metadata"
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BeforeInsert, Column, Entity, 
+    PrimaryGeneratedColumn, Unique, OneToOne, JoinColumn } from "typeorm";
+import { User } from "./User";
 
 export class Profile {
     @PrimaryGeneratedColumn()
@@ -17,8 +18,9 @@ export class Profile {
     @Column({type:"varchar"})
     image: string;
 
-    @Column({type:"number"})
-    user: number;
+    @OneToOne(() => User)
+    @JoinColumn()
+    user: User;
 
 
 
