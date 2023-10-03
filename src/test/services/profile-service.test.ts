@@ -37,3 +37,13 @@ test("Create Profile", async (): Promise<void> => {
 
     expect(profile).toEqual(createdProfile);
 })
+
+test("Update Profile", async (): Promise<void> => {
+    let name: string = "John";
+    let surname: string = "Doe";
+    let username: string = "johnthecool"
+    
+    let profile: Profile = await service.createProfile(name,surname,username);
+
+    
+})
