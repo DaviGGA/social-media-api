@@ -18,8 +18,18 @@ export class ProfileService {
         return this.database.manager.save(profile);
     }
 
-    public async updateProfile(profile: Profile): Promise<Profile>  { 
+    public async updateProfile(profile: Profile): Promise<Profile> { 
         return this.database.manager.save(profile);
+    }
+
+    public async getProfile(profileId: number): Promise<Profile | null> {
+        return this.database.manager.findOne(Profile,{
+            where: {id: profileId}
+        })
+    }
+
+    public async getAllProfiles(): Promise<Profile[]> {
+        return this,this.database.manager.find(Profile)
     }
 
 
