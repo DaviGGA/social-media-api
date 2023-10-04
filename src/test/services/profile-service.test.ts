@@ -45,5 +45,15 @@ test("Update Profile", async (): Promise<void> => {
     
     let profile: Profile = await service.createProfile(name,surname,username);
 
-    
+    profile.name = "Michael"
+    profile.surname = "Jackson"
+    profile.username = "kingofpop"
+
+    let updatedProfile: Profile = await service.updateProfile(profile);
+
+    expect(updatedProfile.name).toBe("Michael");
+    expect(updatedProfile.surname).toBe("Jackson");
+    expect(updatedProfile.username).toBe("kingofpop");
+
+
 })

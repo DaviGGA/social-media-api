@@ -18,21 +18,8 @@ export class ProfileService {
         return this.database.manager.save(profile);
     }
 
-    public async updateProfile(profileId:number,name:string, 
-    surname: string, username: string): Promise<Profile | null>  { 
-        const profile: Profile | null = await this.database.manager.findOne(Profile, {
-            where: {id: profileId}
-        })
-
-        if (profile) {
-            profile.name = name ? name : profile.name;
-            profile.surname = surname ? surname : profile.surname;
-            profile.username = username ? username : profile.username;
-
-            return this.database.manager.save(profile);
-        } else {
-            return null
-        }
+    public async updateProfile(profile: Profile): Promise<Profile>  { 
+        return this.database.manager.save(profile);
     }
 
 
