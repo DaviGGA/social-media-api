@@ -3,6 +3,7 @@ import { BeforeInsert, Column, Entity, JoinColumn,
 OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import { Profile } from "./Profile";
+import { ValidationError } from "../errors/api-error";
 
 @Entity()
 @Unique(['email'])
@@ -39,17 +40,17 @@ export class User {
     private validateEmail(): void {
         // poor email validation       
         if (!this.email.includes('@') || !this.email.includes('.com')) {
-            throw new Error("Validation Error: email is invalid.");
+            throw new ValidationError("Email is invalid.");
         }
     }
     
     private validatePassword(): void {
         if (this.password.length < 8) {
-            throw new Error("Validation Error: Password should have atleast 8 characters");
+            throw new ValidationError("Password should have atleast 8 characters");
         }
 
         if (this.password.length > 16) {
-            throw new Error("Validation Error: Password should not have more than 16 characters")
+            throw new ValidationError("Password should not have more than 16 characters")
         }
 
         const specialCharacterRegex: RegExp = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
@@ -59,7 +60,7 @@ export class User {
         const hasDigit: boolean = numberRegex.test(String(this.password));
 
         if (!hasSpecialCharacter || !hasDigit) {
-            throw new Error ("Validation Error: Password should contain at least 1 digit and 1 special character")
+            throw new ValidationError("Password should contain at least 1 digit and 1 special character")
         }
     }
 }

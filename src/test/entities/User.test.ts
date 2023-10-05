@@ -15,7 +15,7 @@ afterAll(async () => {
 })
 
 afterEach( async () => {
-    await db.manager.getRepository(User).clear();
+    await db.clearTable(User);
 })
 
 
