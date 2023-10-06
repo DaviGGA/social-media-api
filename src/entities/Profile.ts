@@ -1,9 +1,9 @@
 import "reflect-metadata"
 import { BeforeInsert, Column, Entity, 
     PrimaryGeneratedColumn, Unique, OneToOne, JoinColumn } from "typeorm";
-import { User } from "./User";
 
 @Entity()
+@Unique(['username'])
 export class Profile {
     @PrimaryGeneratedColumn()
     id: number;

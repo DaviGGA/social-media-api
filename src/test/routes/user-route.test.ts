@@ -33,14 +33,12 @@ describe("POST requests", () => {
         .send({
             email:"johndoe@domain.com",
             password:"Test1234!",
-            confirm_password:"Test1234!"
+            confirmPassword:"Test1234!"
         })
 
         expect(res.statusCode).toBe(201);
         expect(res.body.data).toMatchObject({
             email:"johndoe@domain.com",
-        })
-
-        
+        })       
     })
 })

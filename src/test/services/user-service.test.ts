@@ -23,17 +23,19 @@ afterEach( async () => {
 })
 
 test('Create user', async () => {
-    let email: string = "johndoe@domain.com"
-    let password: string = "Test1234!"
-    const user: User = await service.createUser(email,password);
+    let user: User = new User();
+    user.email = 'johndoe@domain.com'
+    user.password = 'Test1234!'
+
+    let newUser: User = await service.createUser(user);
 
     const userRep: Repository<User> = db.manager.getRepository(User);
 
     const createdUser: User | null = await userRep.findOne({
-        where: {id: user.id}
+        where: {id: newUser.id}
     })
 
-    expect(user).toEqual(createdUser);
+    expect(newUser).toEqual(createdUser);
 
 })
 

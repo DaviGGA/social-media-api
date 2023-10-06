@@ -23,12 +23,13 @@ afterEach( async () => {
 })
 
 async function createJohnDoe(): Promise<Profile> {
-    let name: string = "John";
-    let surname: string = "Doe";
-    let username: string = "johnthecool"
+    let profile: Profile = new Profile()
+    profile.name = "John";
+    profile.surname = "Doe";
+    profile.username = "johnthecool";
     
-    let profile: Profile = await service.createProfile(name,surname,username);
-    return profile;
+    let newProfile: Profile = await service.createProfile(profile);
+    return newProfile;
 }
 
 test("Create Profile", async (): Promise<void> => {
@@ -46,9 +47,9 @@ test("Create Profile", async (): Promise<void> => {
 test("Update Profile", async (): Promise<void> => {
     let profile: Profile = await createJohnDoe();
 
-    profile.name = "Michael"
-    profile.surname = "Jackson"
-    profile.username = "kingofpop"
+    profile.name = "Michael";
+    profile.surname = "Jackson";
+    profile.username = "kingofpop";
 
     let updatedProfile: Profile = await service.updateProfile(profile);
 
@@ -66,8 +67,19 @@ test("Get profile", async (): Promise<void> => {
 })
 
 test("Get all profiles", async (): Promise<void> => {
-    let profile1: Profile = await service.createProfile("John","Doe","johnthecool");
-    let profile2: Profile = await service.createProfile("John2","Doe2","johnthecool2");
+
+    let p1: Profile = new Profile();
+    p1.name = "John";
+    p1.surname = "Doe";
+    p1.username = "johnthecool";
+
+    let p2: Profile = new Profile();
+    p2.name = "John2";
+    p2.surname = "Doe2";
+    p2.username = "johnthecool2";
+
+    let profile1: Profile = await service.createProfile(p1);
+    let profile2: Profile = await service.createProfile(p2);
 
     let profiles: Profile[] = await service.getAllProfiles();
 

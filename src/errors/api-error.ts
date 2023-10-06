@@ -12,3 +12,9 @@ export class ValidationError extends APIError {
         super(message,422);
     }
 }
+
+export class NotFoundError extends APIError {
+    constructor(message: string) {
+        super(message,404);
+    }
+}

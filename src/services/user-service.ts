@@ -9,11 +9,7 @@ export class UserService {
         this.database = database;
     }
 
-    public async createUser(email: string, password: string): Promise<User> {        
-        const user: User = new User();
-        user.email = email;
-        user.password = password;
-
+    public async createUser(user: User): Promise<User> {        
         return await this.database.manager.save(user);
     }
 

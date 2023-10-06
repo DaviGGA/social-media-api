@@ -9,12 +9,7 @@ export class ProfileService {
         this.database = database;
     }
 
-    public async createProfile(name: string, surname: string, username: string): Promise<Profile> {
-        const profile: Profile = new Profile();
-        profile.name = name;
-        profile.surname = surname;
-        profile.username = username;
-     
+    public async createProfile(profile: Profile): Promise<Profile> {
         return this.database.manager.save(profile);
     }
 
@@ -29,7 +24,7 @@ export class ProfileService {
     }
 
     public async getAllProfiles(): Promise<Profile[]> {
-        return this,this.database.manager.find(Profile)
+        return this.database.manager.find(Profile)
     }
 
 
