@@ -13,16 +13,8 @@ export class App {
         this.server = express();
         this.database = database;
         this.server.use(express.json());
-
-    }
-
-    public async init(port: number) {
-        
         this.routes();    
         this.middleware();
-
-        this.server.listen(port);
-        await this.database.connectDatabase();
     }
 
     private middleware(): void {
@@ -32,7 +24,8 @@ export class App {
     private routes(): void {
         this.server.use('/user', new UserRouter(this.database).router)
     }
-    
+
+ 
 
     // ROUTER
 }

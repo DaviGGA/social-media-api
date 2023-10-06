@@ -5,4 +5,5 @@ import { AppDatabase } from "./database/app-database";
 const db: AppDatabase = new AppDatabase();
 const app: App = new App(db);
 
-app.init(3001);
+app.server.listen(3001);
+db.connectDatabase();

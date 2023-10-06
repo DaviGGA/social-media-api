@@ -3,6 +3,7 @@ import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 const request = require('supertest');
 import { User } from '../../entities/User';
 import { App } from "../../app";
+import { Request, Response } from "supertest";
 
 let db: TestDatabase;
 let app: App;
@@ -13,28 +14,33 @@ beforeAll(async () => {
     await db.connectDatabase();
 })
 
-afterAll(async () => {
-    await db.disconnectDatabase();    
-})
-
 afterEach( async () => {
     await db.clearTable(User);
 })
 
+afterAll(async () => {
+    await db.disconnectDatabase();    
+})
+
+
 
 describe("POST requests", () => {
+
     test("/user/", async () => {
-        request(app.server)
+
+        let res: Response = await request(app.server)
         .post('/user')
         .send({
             email:"johndoe@domain.com",
             password:"Test1234!",
             confirm_password:"Test1234!"
         })
-        .expect('Content-Type', /json/)
-        .expect(201)
-        .end( (err: Error) => {
-            if (err) throw err;
+
+        expect(res.statusCode).toBe(201);
+        expect(res.body.data).toMatchObject({
+            email:"johndoe@domain.com",
         })
+
+        
     })
 })
