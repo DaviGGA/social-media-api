@@ -36,8 +36,9 @@ export class ProfileController {
             name,
             surname,
             username,
-            profileId
         } = req.body 
+
+        let  profileId: number = parseInt(req.params.profileId);
 
         let profile: Profile | null = await this.service.getProfile(profileId);
 

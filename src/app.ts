@@ -4,6 +4,7 @@ require('express-async-errors');
 import { UserRouter } from "./routes/user-route";
 import { Database } from "./database/database";
 import { ErrorHandler } from "./middlewares/error-handler";
+import { ProfileRouter } from "./routes/profile-routes";
 
 export class App {
     public server: express.Application;
@@ -22,7 +23,8 @@ export class App {
     }
 
     private routes(): void {
-        this.server.use('/user', new UserRouter(this.database).router)
+        this.server.use('/user', new UserRouter(this.database).router);
+        this.server.use('/profile', new ProfileRouter(this.database).router);
     }
 
  
