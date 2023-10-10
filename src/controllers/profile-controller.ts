@@ -19,10 +19,16 @@ export class ProfileController {
             username,
         } = req.body
 
+        let image = req.file;
+
         let profile: Profile = new Profile();
         profile.name = name;
         profile.surname = surname;
         profile.username = username;
+        
+        if (image) {
+            profile.image = image.filename;
+        } 
         
         let newProfile: Profile = await this.service.createProfile(profile);
         

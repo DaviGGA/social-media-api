@@ -1,5 +1,6 @@
 import "reflect-metadata"
 import express from "express";
+import multer from "multer";
 require('express-async-errors');
 import { UserRouter } from "./routes/user-route";
 import { Database } from "./database/database";
@@ -9,7 +10,7 @@ import { ProfileRouter } from "./routes/profile-routes";
 export class App {
     public server: express.Application;
     private database: Database;
-
+    
     constructor(database: Database) {
         this.server = express();
         this.database = database;
