@@ -6,8 +6,10 @@ import { TestDatabase } from '../../database/test-database';
 let db: TestDatabase;
 
 beforeAll(async () => {
-    db  = new TestDatabase();
+    db = new TestDatabase();
     await db.connectDatabase();
+   
+    await db.clearTable(User);
 })
 
 afterAll(async () => {

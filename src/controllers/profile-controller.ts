@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Profile } from "../entities/Profile";
 import { ProfileService } from "../services/profile-service";
 import { NotFoundError } from "../errors/api-error";
+import { log } from "console";
 
 export class ProfileController {
     service: ProfileService
@@ -11,7 +12,7 @@ export class ProfileController {
         this.service = new ProfileService(database);
     }
 
-    public async createProfile(req: Request,res: Response, next: NextFunction): Promise<void> {
+    public createProfile = async (req: Request,res: Response, next: NextFunction): Promise<void> => {
         let {
             name,
             surname,
@@ -22,16 +23,16 @@ export class ProfileController {
         profile.name = name;
         profile.surname = surname;
         profile.username = username;
-
+        
         let newProfile: Profile = await this.service.createProfile(profile);
-
+        
         res.status(201).send({
             message: "Profile successfully created!",
             data: newProfile
         })
     }
 
-    public async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public updateProfile =  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         let {
             name,
             surname,
@@ -59,8 +60,8 @@ export class ProfileController {
 
     }
 
-    public async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-        let profileId: number = req.body.profileId;
+    public getProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        let profileId: number = parseInt(req.params.profileId);
 
         let profile: Profile | null = await this.service.getProfile(profileId);
 
@@ -74,7 +75,7 @@ export class ProfileController {
         
     }
 
-    public async getAllProfiles(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public getAllProfiles = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         let profiles: Profile[] = await this.service.getAllProfiles();
 
         res.status(200).send({

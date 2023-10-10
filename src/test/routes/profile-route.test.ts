@@ -42,7 +42,7 @@ describe("Profile POST requests", () => {
 })
 
 describe("Profile PUT requests", () => {
-    test("/profile/", async () => {
+    test("/profile/:profileId", async () => {
         let profile: Profile = new Profile();
         profile.name = 'John';
         profile.surname = 'Doe';
@@ -65,5 +65,46 @@ describe("Profile PUT requests", () => {
             username: 'johntheedited'
         });
     });
+})
+
+describe("Profile GET requests", () => {
+    test("/profile/:profileId", async () => {
+        let profile: Profile = new Profile();
+        profile.name = 'John';
+        profile.surname = 'Doe';
+        profile.username = 'johnthecool';
+
+        let newProfile: Profile = await db.manager.save(Profile,profile);
+
+        let res: Response = await request(app.server)
+        .get(`/profile/${newProfile.id}`)
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body.data).toMatchObject({
+            name: 'John',
+            surname: 'Doe',
+            username: 'johnthecool'
+        })
+    })
+
+    test("/profile/", async () => {
+        let profile: Profile = new Profile();
+        profile.name = 'John';
+        profile.surname = 'Doe';
+        profile.username = 'johnthecool';
+        
+        let newProfile: Profile = await db.manager.save(Profile,profile);
+
+        let res: Response = await request(app.server)
+        .get(`/profile/${newProfile.id}`)
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body.data).toContain({
+            name: 'John',
+            surname: 'Doe',
+            username: 'johnthecool'
+        })
+
+    })
 })
     

@@ -16,5 +16,7 @@ export class ProfileRouter {
     private initializeRoutes(): void {
         this.router.post('/', this.controller.createProfile);
         this.router.put('/:profileId', this.controller.updateProfile);
+        this.router.get('/:profileId', this.controller.getProfile);
+        this.router.get('/', this.controller.getAllProfiles);
     }
 }
