@@ -1,5 +1,6 @@
 import { Database } from "../database/database";
 import { User } from "../entities/User";
+import { FindOneOptions } from 'typeorm';
 
 export class UserService {
 
@@ -10,9 +11,12 @@ export class UserService {
     }
 
     public async createUser(user: User): Promise<User> {        
-        return await this.database.manager.save(user);
+        return this.database.manager.save(user);
     }
 
-
-
+    public async findUserByEmail(email: string): Promise<User | null>  {
+        return this.database.manager.findOne(User, {
+            where: {email: email as any}
+        })
+    }
 }

@@ -15,6 +15,7 @@ export class UserRouter {
 
     private initializeRoutes(): void {
         this.router.post('/',this.controller.createUser);
+        this.router.post('/login', this.controller.login);
     }
 
 }
