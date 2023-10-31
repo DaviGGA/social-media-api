@@ -7,3 +7,5 @@ const app: App = new App(db);
 
 app.server.listen(3001);
 db.connectDatabase();
+
+export default app;

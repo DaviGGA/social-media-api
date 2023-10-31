@@ -3,6 +3,7 @@ import { Database } from "../database/database";
 import express from "express";
 import { Router } from "express";
 import multer, { Multer } from "multer";
+import { Authenticate } from "../middlewares/authenticate";
 
 export class ProfileRouter {
     public controller: ProfileController;
@@ -16,9 +17,9 @@ export class ProfileRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.post('/', this.upload.single('image'), this.controller.createProfile);
-        this.router.put('/:profileId', this.controller.updateProfile);
-        this.router.get('/:profileId', this.controller.getProfile);
-        this.router.get('/', this.controller.getAllProfiles);
+        this.router.post('/', Authenticate.middleware ,this.upload.single('image'), this.controller.createProfile);
+        this.router.put('/:profileId',Authenticate.middleware , this.controller.updateProfile);
+        this.router.get('/:profileId',Authenticate.middleware , this.controller.getProfile);
+        this.router.get('/',Authenticate.middleware , this.controller.getAllProfiles);
     }
 }

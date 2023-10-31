@@ -48,13 +48,12 @@ export class UserController {
         if (!verifyPassword) {
             throw new BadRequestError("Email ou senha inválido.")
         }
-
-        console.log(process.env);
-        console.log(process.env.JWT_SECRET_KEY);
-        
-
+   
         const token = jwt.sign(
-            {id: user.id}, 
+            {
+                id: user.id, 
+                email: user.email
+            }, 
             process.env.JWT_SECRET_KEY ?? '',
             {expiresIn: '1d'}
         )
