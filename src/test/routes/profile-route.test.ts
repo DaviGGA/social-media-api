@@ -1,36 +1,71 @@
-import { TestDatabase } from "../../database/test-database";
 import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 const request = require('supertest');
 import { Profile } from "../../entities/Profile";
-import { App } from "../../app";
 import { Request, Response } from "supertest";
+import jwt from "jsonwebtoken";
+import { Repository } from "typeorm";
+import { User } from "../../entities/User";
+import app from "../../index";
+import testDatasource from "../../database/test-datasource";
+import { Database } from "../../database/database";
 
-let db: TestDatabase;
-let app: App;
+
+let token: string;
+
+let userData: Partial<User> = {
+    email: 'johndoe@domain.com',
+    password: 'Test1234!'
+}
+
+async function getToken(): Promise<string> {
+    let userRep: Repository<User> = app.database.manager.getRepository(User);
+    let user = await userRep.save(userData);
+
+    const signedToken = jwt.sign(
+        {
+            id: user.id, 
+            email: user.email
+        }, 
+        process.env.JWT_SECRET_KEY ?? '',
+        {expiresIn: '1d'}
+    )
+
+    return signedToken
+}
 
 beforeAll(async () => {   
-    db = new TestDatabase();
-    app = new App(db);
-    await db.connectDatabase();
-})
+    const db: Database = new Database();
+    db.setDatasource(testDatasource);
+
+    app.setDatabase(db);
+    app.test();
+    
+    await app.database.connectDatabase();
+    
+    token = await getToken();
+},500);
 
 afterEach( async () => {
-    await db.clearTable(Profile);
-})
+    await app.database.clearTable(Profile);
+},250)
 
 afterAll(async () => {
-    await db.disconnectDatabase();    
-})
+    await app.database.clearTable(User); 
+    await app.database.disconnectDatabase();
+},250)
 
 describe("Profile POST requests", () => {
     test("/profile/", async () => {
+
+        console.log(token)
         let res: Response = await request(app.server)
         .post('/profile/')
         .send({
             name: 'John',
             surname: 'Doe',
             username: 'johnthecool'
-        });
+        })
+        .set({ 'Authorization': `Bearer ${token}` });
         
         expect(res.statusCode).toBe(201)
         expect(res.body.data).toMatchObject({
@@ -48,7 +83,7 @@ describe("Profile PUT requests", () => {
         profile.surname = 'Doe';
         profile.username = 'johnthecool';
 
-        let newProfile: Profile = await db.manager.save(Profile,profile);
+        let newProfile: Profile = await app.database.manager.save(Profile,profile);
 
         let res: Response = await request(app.server)
         .put(`/profile/${newProfile.id}`)
@@ -56,7 +91,8 @@ describe("Profile PUT requests", () => {
             name: 'John edited',
             surname: 'Doe edited',
             username: 'johntheedited',
-        });
+        })
+        .set({ 'Authorization': `Bearer ${token}` });
         
         expect(res.statusCode).toBe(200)
         expect(res.body.data).toMatchObject({
@@ -74,11 +110,12 @@ describe("Profile GET requests", () => {
         profile.surname = 'Doe';
         profile.username = 'johnthecool';
 
-        let newProfile: Profile = await db.manager.save(Profile,profile);
+        let newProfile: Profile = await app.database.manager.save(Profile,profile);
 
         let res: Response = await request(app.server)
         .get(`/profile/${newProfile.id}`)
-
+        .set({ 'Authorization': `Bearer ${token}` })
+        
         expect(res.statusCode).toBe(200)
         expect(res.body.data).toMatchObject({
             name: 'John',
@@ -93,11 +130,12 @@ describe("Profile GET requests", () => {
         profile.surname = 'Doe';
         profile.username = 'johnthecool';
         
-        let newProfile: Profile = await db.manager.save(Profile,profile);
+        let newProfile: Profile = await app.database.manager.save(Profile,profile);
 
         let res: Response = await request(app.server)
         .get(`/profile/${newProfile.id}`)
-
+        .set({ 'Authorization': `Bearer ${token}` })
+        
         expect(res.statusCode).toBe(200)
         expect(res.body.data).toContain({
             name: 'John',

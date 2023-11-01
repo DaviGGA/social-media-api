@@ -10,15 +10,28 @@ import { EntityManager } from "typeorm";
 
 export class App {
     public server: express.Application;
-    private database: Database;
+    public database: Database;
     
-    constructor(database: Database) {
+    public async start(port: number) {
         this.server = express();
-        this.database = database;
+        this.server.use(express.json());
+        this.routes();    
+        this.middleware();
+        
+        await this.database.connectDatabase();
+
+        this.server.listen(port, () => {
+            console.log("Server connected at port " + port)
+        });
+    }
+
+    public async test() {
+        this.server = express();
         this.server.use(express.json());
         this.routes();    
         this.middleware();
     }
+
 
     private middleware(): void {
         this.server.use(ErrorHandler.middleware);
@@ -29,11 +42,9 @@ export class App {
         this.server.use('/profile', new ProfileRouter(this.database).router);
     }
 
-    public get dbManager(): EntityManager {
-        return this.database.manager
+    public setDatabase(database: Database) {
+        this.database = database;
     }
-
- 
 
     // ROUTER
 }

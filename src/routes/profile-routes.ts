@@ -17,9 +17,26 @@ export class ProfileRouter {
     }
 
     private initializeRoutes(): void {
-        this.router.post('/', Authenticate.middleware ,this.upload.single('image'), this.controller.createProfile);
-        this.router.put('/:profileId',Authenticate.middleware , this.controller.updateProfile);
-        this.router.get('/:profileId',Authenticate.middleware , this.controller.getProfile);
-        this.router.get('/',Authenticate.middleware , this.controller.getAllProfiles);
+        this.router.post(
+            '/', 
+            Authenticate.middleware ,
+            this.upload.single('image'), 
+            this.controller.createProfile
+        );
+        this.router.put(
+            '/:profileId',
+            Authenticate.middleware , 
+            this.controller.updateProfile
+        );
+        this.router.get(
+            '/:profileId',
+            Authenticate.middleware ,
+            this.controller.getProfile
+        );
+        this.router.get(
+            '/',
+            Authenticate.middleware, 
+            this.controller.getAllProfiles
+        );
     }
 }

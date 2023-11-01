@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../errors/api-error";
 import jwt from "jsonwebtoken";
-import { Repository } from "typeorm";
-import app from "../index";
 import { User } from "../entities/User";
+import app from "../index";
+import { EntityManager } from "typeorm";
 
 type JWTPayload = {
     id: number,
     email: string
 }
 
-const userRep: Repository<User> = app.dbManager.getRepository(User);
 
 export class Authenticate {
 
@@ -22,8 +21,10 @@ export class Authenticate {
         }
 
         const token = authorization.split(' ')[1];
-        const { id, email } = jwt.verify(token, process.env.JWT_SECRET_KEY ?? '') as JWTPayload;
-
+        const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY ?? '') as JWTPayload;
+        
+        let dbManager: EntityManager = app.database.manager;   
+        const userRep = dbManager.getRepository(User);
         const user: User | null = await userRep.findOneBy({id})
 
         if (!user) {
