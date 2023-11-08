@@ -1,23 +1,27 @@
 import "reflect-metadata"
 import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 import { User } from '../../entities/User';
-import { TestDatabase } from '../../database/test-database';
+import app from "../../index";
+import testDatasource from "../../database/test-datasource";
+import { Database } from "../../database/database";
 
-let db: TestDatabase;
+let db: Database;
 
 beforeAll(async () => {
-    db = new TestDatabase();
-    await db.connectDatabase();
-   
-    await db.clearTable(User);
+    db = new Database();
+    db.setDatasource(testDatasource);
+    app.setDatabase(db);
+ 
+    await app.database.connectDatabase();
+    await app.database.clearTable(User);
 })
 
 afterAll(async () => {
-    await db.disconnectDatabase();
+    await app.database.disconnectDatabase();
 })
 
 afterEach( async () => {
-    await db.clearTable(User);
+    await app.database.clearTable(User);
 })
 
 
@@ -30,7 +34,7 @@ describe("User fields validation", () => {
         user.password = 'Test1234!'
 
         try {
-            await db.manager.save(user);
+            await app.database.manager.save(user);
             
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
@@ -44,7 +48,7 @@ describe("User fields validation", () => {
         user.password = 'Test1!'
 
         try {
-            await db.manager.save(user);
+            await app.database.manager.save(user);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
@@ -56,7 +60,7 @@ describe("User fields validation", () => {
         user.password = 'Test1234'
 
         try {
-            await db.manager.save(user);
+            await app.database.manager.save(user);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
@@ -68,7 +72,7 @@ describe("User fields validation", () => {
         user.password = 'Testest!!'
 
         try {
-            await db.manager.save(user);
+            await app.database.manager.save(user);
         } catch (error) {
             expect(error).toBeInstanceOf(Error);
         }
@@ -77,12 +81,12 @@ describe("User fields validation", () => {
 
     test("Given a user, user is correctly validated, then he is succesfully created", async () => {
         const user = new User();
-        user.email = 'johndoe@domain.com'
+        user.email = 'john.doe@domain.com'
         user.password= 'Test1234!'
 
-        const userCreated = await db.manager.save(user);
+        const userCreated = await app.database.manager.save(user);
 
-        expect(userCreated.email).toBe('johndoe@domain.com')
+        expect(userCreated.email).toBe('john.doe@domain.com')
     })
 
     

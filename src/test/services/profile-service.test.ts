@@ -1,25 +1,32 @@
 import { log } from 'console';
 import { Repository } from 'typeorm';
 import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
-import { TestDatabase } from "../../database/test-database";
+import testDatasource from '../../database/test-datasource';
 import { Profile } from '../../entities/Profile';
 import { ProfileService } from '../../services/profile-service';
+import app from '../../index';
+import { Database } from '../../database/database';
 
-let db: TestDatabase;
+let db: Database;
 let service: ProfileService;
 
 beforeAll(async () => {
-    db = new TestDatabase();
+    db = new Database();
+    db.setDatasource(testDatasource);
+    app.setDatabase(db);
+
     service = new ProfileService(db);
-    await db.connectDatabase();
+    await app.database.connectDatabase();
+
+    await app.database.clearTable(Profile);
 })
 
 afterAll(async () => {
-    await db.disconnectDatabase();
+    await app.database.disconnectDatabase();
 })
 
 afterEach( async () => {
-    await db.clearTable(Profile);
+    await app.database.clearTable(Profile);
 })
 
 async function createJohnDoe(): Promise<Profile> {
@@ -35,7 +42,7 @@ async function createJohnDoe(): Promise<Profile> {
 test("Create Profile", async (): Promise<void> => {
     let profile: Profile = await createJohnDoe();
 
-    let profileRep: Repository<Profile> = db.manager.getRepository(Profile);
+    let profileRep: Repository<Profile> = app.database.manager.getRepository(Profile);
 
     let createdProfile: Profile | null = await profileRep.findOne({
         where: {id: profile.id}

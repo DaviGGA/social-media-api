@@ -1,6 +1,7 @@
 import "reflect-metadata"
 import { BeforeInsert, Column, Entity, 
-    PrimaryGeneratedColumn, Unique, OneToOne, JoinColumn } from "typeorm";
+    PrimaryGeneratedColumn, Unique, OneToOne, JoinColumn, OneToMany } from "typeorm";
+import { Post } from "./Post";
 
 @Entity()
 @Unique(['username'])
@@ -19,5 +20,8 @@ export class Profile {
 
     @Column({type:"varchar", nullable:true})
     image: string;
+
+    @OneToMany(() => Post, (post) => post.profile)
+    posts: Post[]
 
 }

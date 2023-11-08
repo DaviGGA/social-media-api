@@ -1,25 +1,33 @@
 import "reflect-metadata"
 import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 import { User } from '../../entities/User';
-import { TestDatabase } from "../../database/test-database";
 import { UserService } from "../../services/user-service";
 import { Repository } from "typeorm";
+import { Database } from "../../database/database";
+import testDatasource from "../../database/test-datasource";
+import app from "../..";
 
-let db: TestDatabase;
+let db: Database;
 let service: UserService;
 
 beforeAll(async () => {
-    db = new TestDatabase();
+    db = new Database();
+    db.setDatasource(testDatasource);
+    app.setDatabase(db);
+
     service = new UserService(db);
-    await db.connectDatabase();
+   
+    await app.database.connectDatabase();
+
+    await app.database.clearTable(User);
 })
 
 afterAll(async () => {
-    await db.disconnectDatabase();
+    await app.database.disconnectDatabase();
 })
 
 afterEach( async () => {
-    await db.clearTable(User);
+    await app.database.clearTable(User);
 })
 
 test('Create user', async () => {
@@ -29,7 +37,7 @@ test('Create user', async () => {
 
     let newUser: User = await service.createUser(user);
 
-    const userRep: Repository<User> = db.manager.getRepository(User);
+    const userRep: Repository<User> = app.database.manager.getRepository(User);
 
     const createdUser: User | null = await userRep.findOne({
         where: {id: newUser.id}

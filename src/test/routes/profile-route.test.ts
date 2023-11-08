@@ -13,7 +13,7 @@ import { Database } from "../../database/database";
 let token: string;
 
 let userData: Partial<User> = {
-    email: 'johndoe@domain.com',
+    email: 'johndoe.profile@domain.com',
     password: 'Test1234!'
 }
 
@@ -27,7 +27,7 @@ async function getToken(): Promise<string> {
             email: user.email
         }, 
         process.env.JWT_SECRET_KEY ?? '',
-        {expiresIn: '1d'}
+        {expiresIn: '30s'}
     )
 
     return signedToken
@@ -41,23 +41,24 @@ beforeAll(async () => {
     app.test();
     
     await app.database.connectDatabase();
+
+    await app.database.clearTable(User);
+    await app.database.clearTable(Profile);
     
     token = await getToken();
-},500);
+});
 
 afterEach( async () => {
     await app.database.clearTable(Profile);
-},250)
+})
 
 afterAll(async () => {
     await app.database.clearTable(User); 
     await app.database.disconnectDatabase();
-},250)
+})
 
 describe("Profile POST requests", () => {
     test("/profile/", async () => {
-
-        console.log(token)
         let res: Response = await request(app.server)
         .post('/profile/')
         .send({
@@ -114,8 +115,7 @@ describe("Profile GET requests", () => {
 
         let res: Response = await request(app.server)
         .get(`/profile/${newProfile.id}`)
-        .set({ 'Authorization': `Bearer ${token}` })
-        
+        .set({ 'Authorization': `Bearer ${token}` });
         expect(res.statusCode).toBe(200)
         expect(res.body.data).toMatchObject({
             name: 'John',
@@ -134,7 +134,7 @@ describe("Profile GET requests", () => {
 
         let res: Response = await request(app.server)
         .get(`/profile/${newProfile.id}`)
-        .set({ 'Authorization': `Bearer ${token}` })
+        .set({ 'Authorization': `Bearer ${token}` });
         
         expect(res.statusCode).toBe(200)
         expect(res.body.data).toContain({

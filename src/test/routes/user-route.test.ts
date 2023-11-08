@@ -1,25 +1,31 @@
-import { TestDatabase } from "../../database/test-database";
 import { expect, test, describe, beforeAll, afterAll, afterEach } from 'vitest';
 const request = require('supertest');
 import { User } from '../../entities/User';
-import { App } from "../../app";
 import { Request, Response } from "supertest";
+import testDatasource from '../../database/test-datasource';
+import { Database } from '../../database/database';
+import app from '../../index';
 
-let db: TestDatabase;
-let app: App;
+
 
 beforeAll(async () => {   
-    db = new TestDatabase();
-    app = new App(db);
-    await db.connectDatabase();
+    const db: Database = new Database();
+    db.setDatasource(testDatasource);
+
+    app.setDatabase(db);
+    app.test();
+    
+    await app.database.connectDatabase();
+    
+    await app.database.clearTable(User);
 })
 
 afterEach( async () => {
-    await db.clearTable(User);
+    await app.database.clearTable(User);
 })
 
 afterAll(async () => {
-    await db.disconnectDatabase();    
+    await app.database.disconnectDatabase();    
 })
 
 
@@ -31,14 +37,14 @@ describe("POST requests", () => {
         let res: Response = await request(app.server)
         .post('/user')
         .send({
-            email:"johndoe@domain.com",
+            email:"johndoe2@domain.com",
             password:"Test1234!",
             confirmPassword:"Test1234!"
         })
 
         expect(res.statusCode).toBe(201);
         expect(res.body.data).toMatchObject({
-            email:"johndoe@domain.com",
+            email:"johndoe2@domain.com",
         })       
     })
 })
