@@ -27,7 +27,7 @@ async function getToken(): Promise<string> {
             email: user.email
         }, 
         process.env.JWT_SECRET_KEY ?? '',
-        {expiresIn: '30s'}
+        {expiresIn: 15000}
     )
 
     return signedToken

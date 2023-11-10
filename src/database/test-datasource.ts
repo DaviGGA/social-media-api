@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm"
 import { User } from "../entities/User"
 import { Profile } from "../entities/Profile"
+import { Post } from "../entities/Post";
 
 let testDatasource: DataSource =  new DataSource({
     type: "postgres",
@@ -11,7 +12,7 @@ let testDatasource: DataSource =  new DataSource({
     database: "test_redesocial",
     synchronize: true,
     logging: false,
-    entities: [User,Profile],
+    entities: [User,Profile,Post],
     subscribers: [],
     migrations: [],
 })
