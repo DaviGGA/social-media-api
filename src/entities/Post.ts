@@ -13,7 +13,7 @@ export class Post {
     @Column({type:"varchar",length: 240})
     description: string;
 
-    @Column({type: "boolean"})
+    @Column({type: "boolean", default: false})
     edited: boolean;
 
     @ManyToOne(() => Profile, (profile) => profile.posts)
